@@ -216,7 +216,11 @@ public abstract class Shell implements Closeable {
      * @return whether the application has access to root.
      */
     public static boolean rootAccess() {
-        return Utils.isAppGrantedRoot();
+        return Utils.isAppGrantedRoot("su");
+    }
+
+    public static boolean rootAccess(String suCommand) {
+        return Utils.isAppGrantedRoot(suCommand);
     }
 
     /* ************
@@ -395,6 +399,9 @@ public abstract class Shell implements Closeable {
          */
         @NonNull
         public abstract Builder setFlags(@ConfigFlags int flags);
+
+        @NonNull
+        public abstract Builder setSuCommand(@NonNull String suCommand);
 
         /**
          * Set the maximum time to wait for shell verification.

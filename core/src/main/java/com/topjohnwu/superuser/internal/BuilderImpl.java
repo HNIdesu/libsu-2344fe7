@@ -37,6 +37,7 @@ public final class BuilderImpl extends Shell.Builder {
 
     long timeout = 20;
     private int flags = 0;
+    private String suCommand = "su";
     private Shell.Initializer[] initializers;
 
     boolean hasFlags(int mask) {
@@ -72,13 +73,20 @@ public final class BuilderImpl extends Shell.Builder {
 
     @NonNull
     @Override
+    public Shell.Builder setSuCommand(@NonNull String suCommand){
+        this.suCommand = suCommand;
+        return this;
+    }
+
+    @NonNull
+    @Override
     public ShellImpl build() {
         ShellImpl shell = null;
 
         // Root mount master
         if (!hasFlags(FLAG_NON_ROOT_SHELL) && hasFlags(FLAG_MOUNT_MASTER)) {
             try {
-                shell = build("su", "--mount-master");
+                shell = build(suCommand, "--mount-master");
                 if (!shell.isRoot())
                     shell = null;
             } catch (NoShellException ignore) {}
@@ -87,7 +95,7 @@ public final class BuilderImpl extends Shell.Builder {
         // Normal root shell
         if (shell == null && !hasFlags(FLAG_NON_ROOT_SHELL)) {
             try {
-                shell = build("su");
+                shell = build(suCommand);
                 if (!shell.isRoot()) {
                     shell = null;
                     synchronized (Utils.class) {

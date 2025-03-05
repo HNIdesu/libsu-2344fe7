@@ -127,7 +127,7 @@ public final class Utils {
         }
     }
 
-    public synchronized static boolean isAppGrantedRoot() {
+    public synchronized static boolean isAppGrantedRoot(String suCommand) {
         if (confirmedRootState != null) {
             // This confirmed root state will also be set in BuilderImpl
             // and ShellImpl when new shells are getting constructed.
@@ -139,7 +139,7 @@ public final class Utils {
             return true;
         }
         try {
-            Runtime.getRuntime().exec("su --version");
+            Runtime.getRuntime().exec(suCommand + " --version");
             // Even if the execution worked, we don't actually know whether the app has
             // been granted root access. As a heuristic, let's return true here,
             // but do NOT set the value as a confirmed state.
